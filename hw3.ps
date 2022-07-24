@@ -1,0 +1,7 @@
+dir -rec -erroraction ignore HKLM:\ | % name > Base-HKLM.txt
+dir -rec -erroraction ignore HKCU:\ | % name > Base-HKCU.txt
+
+dir -rec -erroraction ignore HKLM:\ | % name > Current-HKLM-$(get-date -f yyyy-MM-dd).txt
+dir -rec -erroraction ignore HKCU:\ | % name > Current-HKCU-$(get-date -f yyyy-MM-dd).txt
+
+Compare-Object (Get-Content -Path .\Base-HKCU.txt) (Get-Content -Path .\[current_snapshot_file_name])| Out-File -FilePath C:\PATH\TO\FOLDER\OUTPUT. txt.
