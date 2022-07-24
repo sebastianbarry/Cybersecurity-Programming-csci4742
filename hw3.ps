@@ -1,3 +1,15 @@
-Get-CimInstance Win32_StartupCommand | Select-Object Name, command, Location, User | Out-file -filepath C:\Users\IEUser\Desktop\Base-startup.txt
-Get-CimInstance Win32_StartupCommand | Select-Object Name, command, Location, User | Out-file -filepath C:\Users\IEUser\Desktop\Current-startup.txt
-Compare-Object (Get-Content -Path C:\Users\IEUser\Desktop\Base-startup.txt) (Get-Content -Path C:\Users\IEUser\Desktop\Current-startup.txt)| Out-File -FilePath C:\Users\IEUser\Desktop\changes.txt
+cd C:\Users\IEUser\Desktop
+Clear-Content .\Current-startup.txt
+Get-Date | Add-Content -Path .\Current-startup.txt
+foreach($line in [System.IO.File]::ReadLines("C:\users\IEUser\Desktop\startuplocations.txt"))
+{
+       $line | Add-Content -Path .\Current-startup.txt
+       dir -Path $line | Add-Content -Path .\Current-startup.txt
+}
+Get-CimInstance Win32_StartupCommand | Select-Object Name, command, Location, User | Add-Content -Path .\Current-startup.txt
+
+Get-Date | Add-Content -Path .\changes.txt
+Compare-Object (Get-Content -Path C:\Users\IEUser\Desktop\Base-startup.txt) (Get-Content -Path C:\Users\IEUser\Desktop\Current-startup.txt)| Add-Content -Path .\changes.txt
+
+Clear-Content .\Base-startup.txt
+Copy-Item -Path C:\Users\IEUser\Desktop\Current-startup.txt -Destination C:\Users\IEUser\Desktop\Base-startup.txt
